@@ -1,0 +1,163 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Savings Cost Predictor
+host: scp.url.url
+basePath: /
+tags:
+  - name: sdf
+    description: Everything about your Pets
+    externalDocs:
+      description: Find out more
+      url: 'http://swagger.io'
+  - name: store
+    description: Access to Petstore orders
+  - name: user
+    description: Operations about user
+    externalDocs:
+      description: Find out more about our store
+      url: 'http://swagger.io'
+  - name: healthcheck
+    description: Status of service
+  - name: aws
+    description: AWS Specific APIs
+  - name: savings
+    description: A
+schemes:
+  - https
+paths:
+  "/aws/healthcheck":
+    get:
+      tags:
+        - healthcheck
+      summary: "Returns service status"
+      description: "Checks if our APIs are online and AWS is online"
+      operationId: getStatus
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: All services online
+  "/aws/account/register":
+    post:
+      tags:
+        - register
+      summary: ""
+      description: "nmmk"
+      operationId: "jjjl"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: userData
+          in: body          
+          description: JSON object containing the user information
+          required: true
+          schema:
+            $ref: "#/definitions/UserData"
+      responses:
+        '200':
+          description: Details saved
+  "/aws/account/new":
+    get:
+      tags:
+        - register
+      summary: "asd"
+      description: "asd"
+      operationId: "asd"
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Generated Data
+          schema:
+            $ref: "#/definitions/GeneratedData"
+  "/aws/account/{UUID}":
+    get:
+      tags:
+        - register
+      summary : ""
+      description: ""
+      operationId: ""
+      produces:
+        - application/json
+      parameters:
+        - name: UUID
+          in: path
+          type: string
+          required: true
+          description: UUID of the UUID:RoleARN mapping
+      responses:
+        '200':
+          description: The RoleARN of the corresponding 
+          schema:
+            $ref: "#/definitions/RoleArnData"
+        '404':
+          description: The RoleARN has not yet been delivered by SNS
+  "/aws/webhook":
+    post:
+      tags:
+        - register
+      summary: ""
+      description: ""
+      operationId: ""
+      consumes:
+        - application/json
+      responses:
+        '200':
+          description: GeneratedData
+          schema:
+            $ref: #definitions/GeneratedData
+  "/savings/aws/{service}/{roleARN}":
+    get:
+      tags:
+        - savings
+      summary: ""
+      description: ""
+      operationId: "asd"
+      parameters:
+        - in: path
+          name: service
+        - in: path
+          name: roleARN
+           description: "asd"
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: "Savings"
+  
+definitions:
+  GeneratedData:
+    type: object
+    properties:
+      UUID:
+        type: string
+      templateLink:
+        type: string
+  RoleArnData:
+    type: object
+    properties:
+      RoleARN:
+        type: string
+        example: "arn:aws:iam:9999999:role/batchly/batchly-trusted"
+  UserData:
+    type: object
+    properties:
+      username:
+        type: string
+        example: ""
+      email:
+        type: string
+        example: "abc@xyz.com"
+      RoleARN:
+        type: string
+        description: RoleARN for the user
+        example: "arn:aws:iam:9999999:role/batchly/batchly-trusted"
+      UUID:
+        type: string
+        description: UUID assigned to user
+        example: "070a62a7-3000-4eb3-88cb-6f7507695364"
+    xml:
+      name: UserData
