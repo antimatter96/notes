@@ -118,7 +118,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#definitions/SavingsData"
+              $ref: "#/definitions/SavingsData"
   "/aws/webhook":
     post:
       tags:
