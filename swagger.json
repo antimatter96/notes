@@ -1,10 +1,11 @@
 {
   "swagger": "2.0",
   "info": {
+    "description": "API for the new Savings Cost Predictor",
     "version": "0.0.1",
     "title": "Savings Cost Predictor"
   },
-  "host": "scp.url.url",
+  "host": "scp.url",
   "basePath": "/",
   "tags": [
     {
@@ -12,12 +13,12 @@
       "description": "Status of service"
     },
     {
-      "name": "Savings",
-      "description": "For existing customers, accessed by front-end console"
-    },
-    {
       "name": "Onboarding",
       "description": "For new customers"
+    },
+    {
+      "name": "Savings",
+      "description": "For existing customers, accessed by front-end console"
     },
     {
       "name": "AWS Only",
@@ -28,10 +29,10 @@
     "/aws/healthcheck": {
       "get": {
         "tags": [
-          "healthcheck"
+          "Healthcheck"
         ],
         "summary": "Returns service status",
-        "description": "Checks if our APIs are online and AWS is online",
+        "description": "Checks if our APIs are online",
         "operationId": "getStatus",
         "produces": [
           "application/json"
@@ -41,6 +42,9 @@
             "description": "All services online"
           }
         }
+      },
+      "500": {
+        "description": "Something is wrong"
       }
     },
     "/aws/account/register": {
@@ -49,7 +53,7 @@
           "Onboarding"
         ],
         "summary": "Registers user and emails report",
-        "description": "",
+        "description": "Registers the users in our database. Actual computation takes place at this and is emailed to the user",
         "operationId": "awsRegister",
         "consumes": [
           "application/json"
@@ -81,7 +85,7 @@
           "Onboarding"
         ],
         "summary": "Get UUID and CF template link",
-        "description": "Creates a CF template ",
+        "description": "Generates a CF template and embeds in it a UUID and uploads it to SNS.",
         "operationId": "awsNew",
         "produces": [
           "application/json"
@@ -101,8 +105,8 @@
         "tags": [
           "Onboarding"
         ],
-        "summary": "",
-        "description": "",
+        "summary": "Checks if RoleARN has been received",
+        "description": "This API is called continously to check if the user has created the stack and RoleARN has been sent by AWS SNS",
         "operationId": "",
         "produces": [
           "application/json"
@@ -129,14 +133,14 @@
         }
       }
     },
-    "/savings/aws/{service}/i/{roleARN}": {
+    "/savings/aws/{service}/{roleARN}": {
       "get": {
         "tags": [
-          "savings"
+          "Savings"
         ],
         "summary": "Savings for a particular service",
-        "description": "jjjj",
-        "operationId": "adsasddads",
+        "description": "This",
+        "operationId": "",
         "parameters": [
           {
             "in": "path",
@@ -170,7 +174,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#definitions/SavingsData"
+                "$ref": "#/definitions/SavingsData"
               }
             }
           }
@@ -182,8 +186,8 @@
         "tags": [
           "AWS Only"
         ],
-        "summary": "",
-        "description": "",
+        "summary": "Endpoint where SNS sends messages ",
+        "description": "This endpoint is to be accessed only by AWS. There will be two type of requests: Subsription confirmation and actual messages.",
         "operationId": "awsWebhook",
         "consumes": [
           "application/json"
