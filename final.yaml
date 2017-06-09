@@ -1,37 +1,41 @@
 swagger: '2.0'
 info:
+  description: >-
+    API for the new Savings Cost Predictor
   version: 0.0.1
-  title: Savings Cost Predictor
+  title: "Savings Cost Predictor"
 host: scp.url
 basePath: /
 tags:
   - name: Healthcheck
-    description: Status of service
-  - name: Savings
-    description: For existing customers, accessed by front-end console
+    description: "Status of service"
   - name: Onboarding
-    description: For new customers
+    description: "For new customers"
+  - name: Savings
+    description: "For existing customers, accessed by front-end console"
   - name: AWS Only
-    description: Will be accessed only by AWS through SNS
+    description: "Will be accessed only by AWS through SNS"
 paths:
   "/aws/healthcheck":
     get:
       tags:
-        - healthcheck
+        - Healthcheck
       summary: "Returns service status"
-      description: "Checks if our APIs are online and AWS is online"
+      description: "Checks if our APIs are online"
       operationId: getStatus
       produces:
         - application/json
       responses:
         '200':
-          description: All services online
+          description: "All services online"
+		'500':
+		  description: "Something is wrong"
   "/aws/account/register":
     post:
       tags:
         - Onboarding
       summary: "Registers user and emails report"
-      description: ""
+      description: "Registers the users in our database. Actual computation takes place at this and is emailed to the user"
       operationId: awsRegister
       consumes:
         - application/json
@@ -52,7 +56,7 @@ paths:
       tags:
         - Onboarding
       summary: "Get UUID and CF template link"
-      description: "Creates a CF template "
+      description: "Generates a CF template and embeds in it a UUID and uploads it to SNS."
       operationId: awsNew
       produces:
         - application/json
@@ -65,8 +69,8 @@ paths:
     get:
       tags:
         - Onboarding
-      summary : ""
-      description: ""
+      summary : "Checks if RoleARN has been received"
+      description: "This API is called continously to check if the user has created the stack and RoleARN has been sent by AWS SNS"
       operationId: ""
       produces:
         - application/json
