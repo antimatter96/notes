@@ -40,13 +40,13 @@ paths:
       parameters:
         - name: userData
           in: body          
-          description: JSON object containing the user information
+          description: "JSON object containing the user information"
           required: true
           schema:
             $ref: '#/definitions/UserData'
       responses:
         '200':
-          description: Details saved
+          description: "Details saved"
   "/aws/account/new":
     get:
       tags:
@@ -58,7 +58,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: Generated Data
+          description: "Generated Data"
           schema:
             $ref: '#/definitions/GeneratedData'
   "/aws/account/{UUID}":
@@ -75,14 +75,14 @@ paths:
           in: path
           type: string
           required: true
-          description: UUID of the UUID:RoleARN mapping
+          description: "UUID of the UUID:RoleARN mapping"
       responses:
         '200':
-          description: The RoleARN of the corresponding 
+          description: "The RoleARN of the corresponding" 
           schema:
             $ref: '#/definitions/RoleArnData'
         '404':
-          description: The RoleARN has not yet been delivered by SNS
+          description: "The RoleARN has not yet been delivered by SNS"
   "/savings/aws/{service}/{roleARN}":
     get:
       tags:
