@@ -186,9 +186,9 @@ definitions:
             description: "Percentage of savings" 
           count:
             type: integer
-          onDemandPrice
-           type: number
-           format: double
-          onDemandPrice
-           type: number
-           format: double
+          onDemandPrice:
+            type: number
+            format: double
+          onDemandPrice:
+            type: number
+            format: double
