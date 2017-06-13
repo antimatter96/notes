@@ -174,12 +174,21 @@ definitions:
   SavingsData:
     type: object
     properties:
-      serviceType:
-        type: string
-        enum: ["ec2","emr","ecs","ops","asg"]
-      savings:
-        type: number
-        format: double
-        description: "Percentage of savings" 
-      count:
-        type: integer
+      region:
+        type:object
+        properties:
+          serviceType:
+            type: string
+            enum: ["ec2","emr","ecs","ops","asg"]
+          savings:
+            type: number
+            format: double
+            description: "Percentage of savings" 
+          count:
+            type: integer
+          onDemandPrice
+           type: number
+           format: double
+          onDemandPrice
+           type: number
+           format: double
