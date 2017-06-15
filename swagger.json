@@ -40,11 +40,11 @@
         "responses": {
           "200": {
             "description": "All services online"
+          },
+          "500": {
+            "description": "Something is wrong"
           }
         }
-      },
-      "500": {
-        "description": "Something is wrong"
       }
     },
     "/aws/account/register": {
@@ -65,8 +65,8 @@
           {
             "name": "userData",
             "in": "body",
-            "description": "JSON object containing the user information",
             "required": true,
+            "description": "JSON object containing the user information",
             "schema": {
               "$ref": "#/definitions/UserData"
             }
@@ -211,7 +211,8 @@
         },
         "templateLink": {
           "type": "string",
-          "example": "https://s3.amazonaws.com/scp-test/test-cf-070a62a7-3000-4eb3-88cb-6f7507695364.template"
+          "example": "https://s3.amazonaws.com/scp-test/test-cf-070a62a7-3000-4eb3-88cb-6f7507695364.template",
+          "description": "Generated CF template link hosted on S3"
         }
       }
     },
@@ -251,22 +252,32 @@
     "SavingsData": {
       "type": "object",
       "properties": {
-        "serviceType": {
-          "type": "string",
-          "enum": [
-            "ec2",
-            "emr",
-            "ecs",
-            "ops",
-            "asg"
-          ]
-        },
-        "savings": {
-          "type": "number",
-          "format": "double"
-        },
-        "count": {
-          "type": "integer"
+        "region": {
+          "type": "object",
+          "properties": {
+            "serviceType": {
+              "type": "string",
+              "enum": [
+                "ec2",
+                "emr",
+                "ecs",
+                "ops",
+                "asg"
+              ]
+            },
+            "savings": {
+              "type": "number",
+              "format": "double",
+              "description": "Percentage of savings"
+            },
+            "count": {
+              "type": "integer"
+            },
+            "onDemandPrice": {
+              "type": "number",
+              "format": "double"
+            }
+          }
         }
       }
     }
