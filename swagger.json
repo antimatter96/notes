@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "API for the new Savings Cost Predictor",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "title": "Savings Cost Predictor"
   },
   "host": "scp.url",
@@ -17,12 +17,12 @@
       "description": "For new customers"
     },
     {
-      "name": "Savings",
-      "description": "For existing customers, accessed by front-end console"
-    },
-    {
       "name": "AWS Only",
       "description": "Will be accessed only by AWS through SNS"
+    },
+    {
+      "name": "Savings",
+      "description": "For existing customers, accessed by front-end console"
     }
   ],
   "paths": {
@@ -42,7 +42,17 @@
             "description": "All services online"
           },
           "500": {
-            "description": "Something is wrong"
+            "description": "Something is wrong",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SpotBidAdvisor is not working",
+                "SpotBidPrice is not working",
+                "SimilarInstances is not working",
+                "Db not working",
+                "Redis not working"
+              ]
+            }
           }
         }
       }
@@ -75,6 +85,9 @@
         "responses": {
           "200": {
             "description": "Details saved"
+          },
+          "400": {
+            "description": "Data sent was not of correct format"
           }
         }
       }
@@ -84,8 +97,8 @@
         "tags": [
           "Onboarding"
         ],
-        "summary": "Get UUID and CF template link",
-        "description": "Generates a CF template and embeds in it a UUID and uploads it to SNS.",
+        "summary": "Get new UUID and CF template link",
+        "description": "Generates a CF template and embeds in it a UUID and uploads it to S3.",
         "operationId": "awsNew",
         "produces": [
           "application/json"
@@ -96,6 +109,9 @@
             "schema": {
               "$ref": "#/definitions/GeneratedData"
             }
+          },
+          "500": {
+            "description": "Error in uploading CF template to S3"
           }
         }
       }
@@ -126,6 +142,9 @@
             "schema": {
               "$ref": "#/definitions/RoleArnData"
             }
+          },
+          "400": {
+            "description": "UUID is not correct"
           },
           "404": {
             "description": "The RoleARN has not yet been delivered by SNS"
@@ -174,9 +193,15 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/SavingsData"
+                "$ref": "#/definitions/ServiceSavingsData"
               }
             }
+          },
+          "400": {
+            "description": "We dont have this roleArn in our db"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -204,10 +229,10 @@
     "GeneratedData": {
       "type": "object",
       "properties": {
-        "UUID": {
+        "uuid": {
           "type": "string",
           "example": "070a62a7-3000-4eb3-88cb-6f7507695364",
-          "description": "A version 4 UUID.Assigned to every new user.Used to map email/name to roleARN"
+          "description": "A version 4 UUID. Assigned to every new user.Used to map email/name to roleARN"
         },
         "templateLink": {
           "type": "string",
@@ -246,37 +271,106 @@
           "type": "string",
           "example": "070a62a7-3000-4eb3-88cb-6f7507695364",
           "description": "A version 4 UUID.Assigned to every new user.Used to map email/name to roleARN"
+        },
+        "organisation": {
+          "type": "string",
+          "example": "Swiggy"
         }
       }
     },
-    "SavingsData": {
+    "AlternateData": {
+      "type": "object",
+      "properties": {
+        "for": {
+          "type": "string",
+          "description": "For which type it is a replacement of"
+        },
+        "count": {
+          "type": "integer",
+          "description": "Count of this instance type"
+        }
+      }
+    },
+    "RegionSavingsDataObjectItem": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Instance type"
+        },
+        "count": {
+          "type": "integer",
+          "description": "Orignal count ie without considering the instances it is the alternative for"
+        },
+        "odPrice": {
+          "type": "number",
+          "format": "double"
+        },
+        "spotPrice": {
+          "type": "number",
+          "format": "double"
+        },
+        "platform": {
+          "type": "string",
+          "enum": [
+            "linux",
+            "windows"
+          ]
+        },
+        "alternativeFor": {
+          "type": "array",
+          "description": "Instances it is acting as an alternative for",
+          "items": {
+            "$ref": "#/definitions/AlternateData"
+          }
+        }
+      }
+    },
+    "RegionSavingsDataObject": {
       "type": "object",
       "properties": {
         "region": {
-          "type": "object",
-          "properties": {
-            "serviceType": {
-              "type": "string",
-              "enum": [
-                "ec2",
-                "emr",
-                "ecs",
-                "ops",
-                "asg"
-              ]
-            },
-            "savings": {
-              "type": "number",
-              "format": "double",
-              "description": "Percentage of savings"
-            },
-            "count": {
-              "type": "integer"
-            },
-            "onDemandPrice": {
-              "type": "number",
-              "format": "double"
-            }
+          "type": "string"
+        },
+        "totalOd": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalSpot": {
+          "type": "number",
+          "format": "double"
+        },
+        "savings": {
+          "type": "number",
+          "format": "double"
+        },
+        "data": {
+          "type": "array",
+          "description": "Description of different instance types used by customer",
+          "items": {
+            "$ref": "#/definitions/RegionSavingsDataObjectItem"
+          }
+        }
+      }
+    },
+    "ServiceSavingsData": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "string",
+          "enum": [
+            "ec2",
+            "emr",
+            "ecs",
+            "ops",
+            "asg"
+          ]
+        },
+        "data": {
+          "type": "array",
+          "description": "Region wise savings data for the service",
+          "items": {
+            "$ref": "#/definitions/RegionSavingsDataObject"
           }
         }
       }
