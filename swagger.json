@@ -152,7 +152,7 @@
         }
       }
     },
-    "/savings/aws/{service}/{roleARN}": {
+    "/savings/aws/i/{service}/{roleARN}": {
       "get": {
         "tags": [
           "Savings"
@@ -168,7 +168,6 @@
             "required": true,
             "description": "The service whose savings is to be calculated",
             "enum": [
-              "summary",
               "ec2",
               "asg",
               "emr",
@@ -189,7 +188,46 @@
         ],
         "responses": {
           "200": {
-            "description": "An array of savings object",
+            "description": "Savings object",
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/ServiceSavingsData"
+              }
+            }
+          },
+          "400": {
+            "description": "We dont have this roleArn in our db"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/savings/aws/a/{roleARN}": {
+      "get": {
+        "tags": [
+          "Savings"
+        ],
+        "summary": "Savingssummary for all the services",
+        "description": "This",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roleARN",
+            "type": "string",
+            "required": true,
+            "description": "RoleARN of the customer for whom savings is to be calculated"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of Savings Object",
             "schema": {
               "type": "array",
               "items": {
