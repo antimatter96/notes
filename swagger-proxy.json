@@ -30,8 +30,22 @@
         "summary": "Verifies from google if user is human",
         "description": "Bot check and stores temp user data",
         "operationId": "CaptchaVerify",
+        "consumes": [
+          "application/json"
+        ],
         "produces": [
           "text/plain; charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "userData",
+            "in": "body",
+            "required": true,
+            "description": "JSON object containing the user information",
+            "schema": {
+              "$ref": "#/definitions/CaptchaInputData"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -54,22 +68,8 @@
         "summary": "Returns service status",
         "description": "Checks if our APIs are online",
         "operationId": "getStatus",
-        "consumes": [
-          "application/json"
-        ],
         "produces": [
           "text/plain; charset=utf-8"
-        ],
-        "parameters": [
-          {
-            "name": "userData",
-            "in": "body",
-            "required": true,
-            "description": "JSON object containing the user information",
-            "schema": {
-              "$ref": "#/definitions/CaptchaInputData"
-            }
-          }
         ],
         "responses": {
           "200": {
